@@ -2,7 +2,6 @@ package com.nantesmatthew.movie.presentation
 
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +58,9 @@ class MovieDetailsFragment : Fragment() {
             val imageView = binder.imageCover.apply {
                 transitionName = args.imageCover
             }
-            Glide.with(requireContext()).load(args.imageCover)
+            Glide.with(requireContext())
+                .asDrawable()
+                .load(args.imageCover)
                 .apply(RequestOptions.centerCropTransform())
                 .into(imageView)
         }
@@ -75,7 +76,10 @@ class MovieDetailsFragment : Fragment() {
 
         //UI State of Movie Details
         movieDetailsViewModel.movie.observe(viewLifecycleOwner) { movie ->
-            Glide.with(requireContext()).load(movie.artwork)
+            if (binder.imageCover.drawable == null)
+            Glide.with(requireContext())
+                .asDrawable()
+                .load(movie.artwork)
                 .apply(RequestOptions.centerCropTransform())
                 .into(binder.imageCover)
 
@@ -105,8 +109,6 @@ class MovieDetailsFragment : Fragment() {
         movieDetailsViewModel.saveUserSession(UserSession(Date(), Screen.Detail, args.trackId))
 
     }
-
-
 
 
 }

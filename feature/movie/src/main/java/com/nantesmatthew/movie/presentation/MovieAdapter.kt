@@ -36,7 +36,10 @@ class MovieAdapter(
         val movie = getItem(position)
         if (holder.binder.tvTrackName.text == movie.trackName) return
 
-        Glide.with(holder.itemView.context).load(movie.artwork).centerCrop()
+        Glide.with(holder.itemView.context).load(movie.artwork)
+            .placeholder(R.drawable.ic_image_loading_placeholder)
+            .error(R.drawable.ic_image_error_placeholder)
+            .centerCrop()
             .into(holder.binder.imageCover)
         holder.binder.tvTrackName.text = movie.trackName
         holder.binder.tvArtistName.text = movie.artistName
