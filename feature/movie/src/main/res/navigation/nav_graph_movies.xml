@@ -23,8 +23,5 @@
             app:argType="string"
             />
     </fragment>
-    <fragment
-        android:id="@+id/moviesTestFragment"
-        android:name="com.nantesmatthew.movie.presentation.MoviesTestFragment"
-        android:label="MoviesTestFragment" />
+
 </navigation>
