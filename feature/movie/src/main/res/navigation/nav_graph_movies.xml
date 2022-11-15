@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/moviesFragment">
+
+    <fragment
+        android:id="@+id/moviesFragment"
+        android:name="com.nantesmatthew.movie.presentation.MoviesFragment"
+        android:label="MoviesFragment" >
+
+        <action
+            android:id="@+id/action_moviesFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.nantesmatthew.movie.presentation.MovieDetailsFragment"
+        android:label="MovieDetailsFragment" >
+        <argument android:name="trackId"
+            app:argType="integer" />
+        <argument android:name="imageCover"
+            app:nullable="true"
+            app:argType="string"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/moviesTestFragment"
+        android:name="com.nantesmatthew.movie.presentation.MoviesTestFragment"
+        android:label="MoviesTestFragment" />
+</navigation>
