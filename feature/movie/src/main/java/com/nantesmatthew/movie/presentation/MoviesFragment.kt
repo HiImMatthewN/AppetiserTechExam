@@ -22,6 +22,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.nantesmatthew.core.ext.animationListener
+import com.nantesmatthew.core.ext.reStoreState
 import com.nantesmatthew.movie.R
 import com.nantesmatthew.movie.databinding.FragmentMoviesBinding
 import com.nantesmatthew.movie.domain.model.Movie
@@ -136,7 +138,7 @@ class MoviesFragment : Fragment() {
 
         }
 
-        //Show Last Opened Date to Toolbar
+        //Toolbar User Session Info
         viewModelMovies.getLastUserSession { userSession ->
             runToolbarAnimation(userSession)
         }
@@ -144,82 +146,49 @@ class MoviesFragment : Fragment() {
 
     }
 
+    //Looping Animation for toolbar
     private var toolBarTitleRunnable: Runnable? = null
     private fun runToolbarAnimation(userSession: UserSession) {
         val handler = Handler(Looper.getMainLooper())
         var toolbarState: ToolBarState = ToolBarState.UserSession
+
+        val exitAnimation =
+            AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_fade_out)
+        val enterAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_fade_in)
+
+        exitAnimation.animationListener(
+            onStart = {
+                binder.tvToolBarTitle.text = getToolbarTitle(toolbarState, userSession)
+            },
+            onEnd = {
+                enterAnimation.animationListener(
+                    onStart = {
+                        toolbarState =
+                            if (toolbarState is ToolBarState.Title) ToolBarState.UserSession else ToolBarState.Title
+                        binder.tvToolBarTitle.text = getToolbarTitle(toolbarState, userSession)
+                    },
+                    onEnd = {
+
+
+                    })
+
+                binder.tvToolBarTitle.startAnimation(enterAnimation)
+            })
+
         toolBarTitleRunnable = Runnable {
-            val animation =
-                AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_fade_out)
-                    .apply {
-                        setAnimationListener(object : Animation.AnimationListener {
-                            override fun onAnimationStart(p0: Animation?) {
+            binder.tvToolBarTitle.startAnimation(exitAnimation)
+            handler.postDelayed(toolBarTitleRunnable!!,10000)
 
-                                binder.tvToolBarTitle.text =
-                                    if (toolbarState is ToolBarState.Title)
-                                        "Appetiser Apps"
-                                    else
-                                        "Last Opened:\n${userSession.getLastOpened()}"
-
-                            }
-
-                            override fun onAnimationEnd(p0: Animation?) {
-                                binder.tvToolBarTitle.text =
-                                    if (toolbarState is ToolBarState.Title)
-                                        "Last Opened:\n${userSession.getLastOpened()}"
-                                    else
-                                        "Appetiser Apps"
-
-
-                                toolbarState =
-                                    if (toolbarState is ToolBarState.Title) ToolBarState.UserSession else ToolBarState.Title
-
-                                val slideIn = AnimationUtils.loadAnimation(
-                                    requireContext(),
-                                    R.anim.slide_in_fade_in
-                                ).apply {
-                                    setAnimationListener(object : Animation.AnimationListener {
-                                        override fun onAnimationStart(p0: Animation?) {
-                                            if (toolbarState is ToolBarState.Title)
-                                                "Appetiser Apps"
-                                            else
-                                                "Last Opened:\n${userSession.getLastOpened()}"
-
-                                        }
-
-                                        override fun onAnimationEnd(p0: Animation?) {
-                                            binder.tvToolBarTitle.text =
-                                                if (toolbarState is ToolBarState.Title)
-                                                    "Appetiser Apps"
-                                                else
-                                                    "Last Opened:\n${userSession.getLastOpened()}"
-
-
-                                            toolbarState =
-                                                if (toolbarState is ToolBarState.Title) ToolBarState.UserSession else ToolBarState.Title
-                                        }
-
-                                        override fun onAnimationRepeat(p0: Animation?) {
-                                        }
-                                    })
-
-
-                                }
-                                binder.tvToolBarTitle.startAnimation(slideIn)
-
-
-                            }
-
-                            override fun onAnimationRepeat(p0: Animation?) {
-                            }
-                        })
-                    }
-            binder.tvToolBarTitle.startAnimation(animation)
-            handler.postDelayed(toolBarTitleRunnable!!, 10000)
         }
         handler.post(toolBarTitleRunnable!!)
 
+    }
 
+    private fun getToolbarTitle(toolBarState: ToolBarState, userSession: UserSession): String {
+        return when (toolBarState) {
+            ToolBarState.Title -> "Appetiser Apps"
+            ToolBarState.UserSession -> "Last Opened:\n${userSession.getLastOpened()}"
+        }
     }
 
     override fun onPause() {
@@ -233,7 +202,4 @@ class MoviesFragment : Fragment() {
 
 }
 
-fun RecyclerView.reStoreState() {
-    val recyclerViewState = this.layoutManager?.onSaveInstanceState()
-    this.layoutManager?.onRestoreInstanceState(recyclerViewState)
-}
+
