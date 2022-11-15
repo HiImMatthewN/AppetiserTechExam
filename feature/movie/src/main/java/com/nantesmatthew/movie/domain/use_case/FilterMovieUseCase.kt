@@ -16,6 +16,6 @@ class FilterMovieUseCase @Inject constructor() {
      * @return if filter is empty or blank, returns the whole list else returns the filtered list
      */
     operator fun invoke(movies:List<Movie>,filter:String):List<Movie> =
-    if (filter.isBlank()) movies else movies.filter { it.trackName.lowercase().contains(filter.lowercase()) }
+    if (filter.isBlank()) movies else movies.filter { it.trackName.lowercase().contains(filter.trim().lowercase()) }
 
 }

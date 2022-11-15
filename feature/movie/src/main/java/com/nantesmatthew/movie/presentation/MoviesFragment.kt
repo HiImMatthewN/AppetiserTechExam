@@ -48,7 +48,6 @@ import java.util.*
 @AndroidEntryPoint
 class MoviesFragment : Fragment() {
     private lateinit var binder: FragmentMoviesBinding
-    private val genreAdapter = GenreAdapter()
     private val viewModelMovies by viewModels<MoviesViewModel>()
 
     companion object {
@@ -78,7 +77,7 @@ class MoviesFragment : Fragment() {
             }
         }
 
-
+        val genreAdapter = GenreAdapter()
         //Handles Movie Image on Click
         genreAdapter.onMovieSelected = { movie, imageView ->
 
@@ -148,8 +147,8 @@ class MoviesFragment : Fragment() {
 
     //Looping Animation for toolbar
     private var toolBarTitleRunnable: Runnable? = null
+    private val handler = Handler(Looper.getMainLooper())
     private fun runToolbarAnimation(userSession: UserSession) {
-        val handler = Handler(Looper.getMainLooper())
         var toolbarState: ToolBarState = ToolBarState.UserSession
 
         val exitAnimation =
@@ -176,9 +175,10 @@ class MoviesFragment : Fragment() {
             })
 
         toolBarTitleRunnable = Runnable {
-            binder.tvToolBarTitle.startAnimation(exitAnimation)
-            handler.postDelayed(toolBarTitleRunnable!!,10000)
-
+            if (toolBarTitleRunnable != null) {
+                binder.tvToolBarTitle.startAnimation(exitAnimation)
+                handler.postDelayed(toolBarTitleRunnable!!, 10000)
+            }
         }
         handler.post(toolBarTitleRunnable!!)
 
@@ -193,10 +193,17 @@ class MoviesFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-
         //Save UserSession
         viewModelMovies.saveUserSession(UserSession(Date(), Screen.Category, 0))
+    }
 
+    override fun onStop() {
+        super.onStop()
+        //Clean up Toolbar Runnable
+        if (toolBarTitleRunnable != null) {
+            handler.removeCallbacks(toolBarTitleRunnable!!)
+            toolBarTitleRunnable = null
+        }
     }
 
 

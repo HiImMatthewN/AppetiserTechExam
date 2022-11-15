@@ -1,6 +1,7 @@
 package com.nantesmatthew.appetisertechexam
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -15,6 +16,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binder: ActivityMainBinding
     private val viewModelMain by viewModels<MainViewModel>()
+    companion object{
+        val IS_SCREEN_RESTORED = "IsScreenRestored"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -22,32 +26,42 @@ class MainActivity : AppCompatActivity() {
         setContentView(binder.root)
 
 
-        viewModelMain.getLastUserSession { userSession ->
-            when (userSession.screenOpened) {
-                Screen.Category -> {
 
-                }
-                Screen.Detail -> {
-                    val navHostFragment =
-                        supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-                    navHostFragment.navController.navigate(
-                        MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(
-                            userSession.screenInfo,
-                            null
+        //Only Restore Last Visited on startup/restore
+        //Check if there's a saved state to prevent restoring on rotating
+        if (savedInstanceState == null){
+            viewModelMain.getLastUserSession { userSession ->
+                when (userSession.screenOpened) {
+                    Screen.Category -> {
+
+                    }
+                    Screen.Detail -> {
+                        val navHostFragment =
+                            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                        navHostFragment.navController.navigate(
+                            MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(
+                                userSession.screenInfo,
+                                null
+                            )
                         )
-                    )
-                }
-                Screen.Invalid -> {
+                    }
+                    Screen.Invalid -> {
 
+                    }
                 }
+
             }
-
         }
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
 
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        //Save state on restore
+        outState.putBoolean(IS_SCREEN_RESTORED,true)
+    }
+
+
 }
