@@ -3,6 +3,7 @@ package com.nantesmatthew.movie.presentation
 import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,6 @@ class MovieDetailsFragment : Fragment() {
         private const val PREVIEW_VIDEO_TIME = "PreviewVideoTime"
     }
 
-    //TODO Handle Pause and Resume of Video On Rotate and close
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition =
@@ -80,10 +80,8 @@ class MovieDetailsFragment : Fragment() {
             val isVideoViewPlaying = binder.videoViewMoviePreview.isPlaying
             binder.btnPlay.playAnimation()
             if (isVideoViewPlaying) {
-                movieDetailsViewModel.startStopTimer(false)
                 movieDetailsViewModel.playPausePreview(MovieDetailsPreviewState.NotPlaying)
             } else {
-                movieDetailsViewModel.startStopTimer(true)
                 val moviePreviewUrl = movieDetailsViewModel.movie.value?.previewUrl
                 movieDetailsViewModel.playPausePreview(
                     MovieDetailsPreviewState.Playing(
@@ -98,19 +96,25 @@ class MovieDetailsFragment : Fragment() {
         binder.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
-
+        //Listener on video finished playing
+        binder.videoViewMoviePreview.setOnCompletionListener {
+            binder.btnPlay.showStart()
+            movieDetailsViewModel.playPausePreview(MovieDetailsPreviewState.NotPlaying)
+        }
 
         lifecycleScope.launchWhenStarted {
             movieDetailsViewModel.previewVideoState.collect { moviePreviewState ->
                 when (moviePreviewState) {
                     MovieDetailsPreviewState.NotPlaying -> {
+                        movieDetailsViewModel.startStopTimer(false)
                         binder.videoViewMoviePreview.stopPlayback()
                         binder.videoViewMoviePreview.setVideoURI(null)
                         binder.containerVideoView.isVisible = false
                         savedInstanceState?.putInt(PREVIEW_VIDEO_TIME, -1)
-
+                        binder.tvVideoTimeStamp.text = "00:00"
                     }
                     is MovieDetailsPreviewState.Playing -> {
+                        movieDetailsViewModel.startStopTimer(true)
                         binder.root.transitionToStart()
                         binder.containerVideoView.isVisible = true
                         val moviePreviewUri = Uri.parse(moviePreviewState.previewUrl)
@@ -167,7 +171,7 @@ class MovieDetailsFragment : Fragment() {
 
     }
 
-    fun timeUnitToFullTime(time: Long, timeUnit: TimeUnit): String {
+    private fun timeUnitToFullTime(time: Long, timeUnit: TimeUnit): String {
         val day: Long = timeUnit.toDays(time)
         val hour: Long = timeUnit.toHours(time) % 24
         val minute: Long = timeUnit.toMinutes(time) % 60
