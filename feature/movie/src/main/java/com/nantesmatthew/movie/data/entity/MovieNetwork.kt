@@ -19,25 +19,14 @@ class MovieNetwork(
     val trackPrice: Double?,
     @SerializedName("trackTimeMillis")
     val trackTimeMillis: Int?,
+    @SerializedName("previewUrl")
+    val previewUrl:String?,
     @SerializedName("shortDescription")
     val shortDescription: String?,
     @SerializedName("longDescription")
     val longDescription: String?
 )
 
-fun MovieNetwork.toDomain(): Movie {
-    return Movie(
-        trackId = this.trackId,
-        trackName = this.trackName ?: "",
-        artistName = this.artistName ?: "",
-        primaryGenre = this.primaryGenre ?: "",
-        artwork = this.artwork ?: "",
-        trackPrice = this.trackPrice ?: 0.0,
-        trackTimeMillis = this.trackTimeMillis ?: 0,
-        shortDescription = this.shortDescription ?: "",
-        longDescription = this.longDescription ?: ""
-    )
-}
 
 fun MovieNetwork.toLocalEntity(): MovieEntity {
     return MovieEntity(
@@ -48,6 +37,7 @@ fun MovieNetwork.toLocalEntity(): MovieEntity {
         artwork = if (this.artwork.isNullOrBlank()) "N/A" else this.artwork,
         trackPrice = this.trackPrice ?: 0.0,
         durationInMillis = this.trackTimeMillis ?: 0,
+        previewUrl = this.previewUrl ?: "",
         shortDescription = if (this.shortDescription.isNullOrBlank()) "N/A" else this.shortDescription,
         longDescription = if (this.longDescription.isNullOrBlank()) "N/A" else this.longDescription
     )

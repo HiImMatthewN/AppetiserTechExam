@@ -1,13 +1,16 @@
 package com.nantesmatthew.movie.presentation
 
+import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -18,6 +21,7 @@ import com.nantesmatthew.user_session.domain.model.Screen
 import com.nantesmatthew.user_session.domain.model.UserSession
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * Screen for showing movie details selected from [MoviesFragment]
@@ -32,8 +36,10 @@ class MovieDetailsFragment : Fragment() {
 
     companion object {
         private const val TAG = "MovieDetailsFragment"
+        private const val PREVIEW_VIDEO_TIME = "PreviewVideoTime"
     }
 
+    //TODO Handle Pause and Resume of Video On Rotate and close
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition =
@@ -52,7 +58,6 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         //Showing of image from SharedElement Transition
         args.imageCover?.let {
             val imageView = binder.imageCover.apply {
@@ -69,14 +74,68 @@ class MovieDetailsFragment : Fragment() {
         binder.btnFavorite.setOnClickListener {
             movieDetailsViewModel.addRemoveFromFavorite(movieDetailsViewModel.movie.value)
         }
+
+        //Plays Preview Video
+        binder.btnPlay.setOnClickListener {
+            val isVideoViewPlaying = binder.videoViewMoviePreview.isPlaying
+            binder.btnPlay.playAnimation()
+            if (isVideoViewPlaying) {
+                movieDetailsViewModel.startStopTimer(false)
+                movieDetailsViewModel.playPausePreview(MovieDetailsPreviewState.NotPlaying)
+            } else {
+                movieDetailsViewModel.startStopTimer(true)
+                val moviePreviewUrl = movieDetailsViewModel.movie.value?.previewUrl
+                movieDetailsViewModel.playPausePreview(
+                    MovieDetailsPreviewState.Playing(
+                        moviePreviewUrl
+                    )
+                )
+            }
+
+        }
+
         //Returns to Movie Fragment
         binder.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
+
+        lifecycleScope.launchWhenStarted {
+            movieDetailsViewModel.previewVideoState.collect { moviePreviewState ->
+                when (moviePreviewState) {
+                    MovieDetailsPreviewState.NotPlaying -> {
+                        binder.videoViewMoviePreview.stopPlayback()
+                        binder.videoViewMoviePreview.setVideoURI(null)
+                        binder.containerVideoView.isVisible = false
+                        savedInstanceState?.putInt(PREVIEW_VIDEO_TIME, -1)
+
+                    }
+                    is MovieDetailsPreviewState.Playing -> {
+                        binder.root.transitionToStart()
+                        binder.containerVideoView.isVisible = true
+                        val moviePreviewUri = Uri.parse(moviePreviewState.previewUrl)
+                        binder.videoViewMoviePreview.setVideoURI(moviePreviewUri)
+                        binder.videoViewMoviePreview.start()
+
+                        //Restore State if necessary
+                        savedInstanceState?.let { state ->
+                            val lastPlayed = state.getInt(PREVIEW_VIDEO_TIME)
+                            if (lastPlayed != -1) {
+                                binder.videoViewMoviePreview.seekTo(lastPlayed * 1000)
+                                binder.btnPlay.showEnd()
+                            }
+
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+
         //UI State of Movie Details
         movieDetailsViewModel.movie.observe(viewLifecycleOwner) { movie ->
-            if (binder.imageCover.drawable == null)
             Glide.with(requireContext())
                 .asDrawable()
                 .load(movie.artwork)
@@ -89,17 +148,50 @@ class MovieDetailsFragment : Fragment() {
             binder.tvRuntime.text = "Runtime: ${movie.getRuntime()}"
             binder.tvDescription.text = movie.longDescription
 
-
             binder.btnFavorite.setImageDrawable(
                 if (movie.isFavorite)
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_filled)
                 else
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_border)
-
             )
+
+            lifecycleScope.launchWhenStarted {
+                movieDetailsViewModel.previewVideoTimeState.collect {
+                    binder.tvVideoTimeStamp.text = timeUnitToFullTime(it.toLong(), TimeUnit.SECONDS)
+                }
+            }
+
+
         }
 
 
+    }
+
+    fun timeUnitToFullTime(time: Long, timeUnit: TimeUnit): String {
+        val day: Long = timeUnit.toDays(time)
+        val hour: Long = timeUnit.toHours(time) % 24
+        val minute: Long = timeUnit.toMinutes(time) % 60
+        val second: Long = timeUnit.toSeconds(time) % 60
+        return if (day > 0) {
+            String.format("%dday %02d:%02d:%02d", day, hour, minute, second)
+        } else if (hour > 0) {
+            String.format("%d:%02d:%02d", hour, minute, second)
+        } else if (minute > 0) {
+            String.format("%d:%02d", minute, second)
+        } else {
+            String.format("00:%02d", second)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+
+        //Save Preview Video Position on Screen Rotation
+        if (movieDetailsViewModel.previewVideoState.value is MovieDetailsPreviewState.Playing) {
+            val currentPosition = movieDetailsViewModel.previewVideoTimeState.value
+            outState.putInt(PREVIEW_VIDEO_TIME, currentPosition)
+        }
     }
 
     override fun onPause() {

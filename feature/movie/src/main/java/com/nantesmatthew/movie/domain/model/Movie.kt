@@ -18,6 +18,7 @@ data class Movie(
     val artwork:String,
     val trackPrice:Double,
     val trackTimeMillis:Int,
+    val previewUrl:String,
     val shortDescription:String,
     val longDescription:String,
     val isFavorite:Boolean = false

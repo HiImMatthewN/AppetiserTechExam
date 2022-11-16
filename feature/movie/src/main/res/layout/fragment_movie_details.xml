@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_white"
     app:layoutDescription="@xml/fragment_movie_details_scene">
+
 
     <ImageView
         android:id="@+id/imageCover"
@@ -16,6 +18,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <RelativeLayout
+        android:id="@+id/containerVideoView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        android:visibility="visible">
+
+        <VideoView
+            android:id="@+id/videoViewMoviePreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/tvVideoTimeStamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
+            android:layout_marginEnd="32dp"
+            android:textSize="16sp"
+            android:textColor= "@android:color/white"
+            android:fontFamily="@font/inter_light"
+             />
+    </RelativeLayout>
+
     <ImageButton
         android:id="@+id/btnFavorite"
         android:layout_width="wrap_content"
@@ -26,6 +55,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <LinearLayout
 
         android:id="@+id/containerMovieDetails"
@@ -33,7 +63,8 @@
         android:layout_height="0dp"
         android:background="@drawable/bg_rounded_top_corners"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        tools:layout_editor_absoluteY="185dp">
 
         <TextView
 
@@ -88,7 +119,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <com.nantesmatthew.movie.presentation.PlayToCloseMorphView
 
         android:id="@+id/btnPlay"
         android:layout_width="wrap_content"
@@ -96,7 +127,6 @@
         android:background="@drawable/bg_circle"
         android:elevation="8dp"
         android:padding="12dp"
-        android:src="@drawable/ic_play"
         app:layout_constraintBottom_toTopOf="@id/containerMovieDetails"
         app:layout_constraintEnd_toEndOf="@id/containerMovieDetails"
         app:layout_constraintStart_toStartOf="@id/containerMovieDetails"

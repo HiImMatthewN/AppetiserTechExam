@@ -3,14 +3,10 @@ package com.nantesmatthew.movie.presentation
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.transition.Fade
-import android.transition.Slide
-import android.transition.TransitionSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -21,18 +17,13 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.nantesmatthew.core.ext.animationListener
 import com.nantesmatthew.core.ext.reStoreState
 import com.nantesmatthew.movie.R
 import com.nantesmatthew.movie.databinding.FragmentMoviesBinding
-import com.nantesmatthew.movie.domain.model.Movie
-import com.nantesmatthew.movie.domain.model.MoviesByGenre
 import com.nantesmatthew.user_session.domain.model.Screen
 import com.nantesmatthew.user_session.domain.model.UserSession
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import java.util.*
 
 
@@ -107,7 +98,7 @@ class MoviesFragment : Fragment() {
                     binder.btnSearch.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_close
+                            R.drawable.ic_close_24
                         )
                     )
                     binder.root.transitionToEnd()
@@ -204,6 +195,7 @@ class MoviesFragment : Fragment() {
             handler.removeCallbacks(toolBarTitleRunnable!!)
             toolBarTitleRunnable = null
         }
+
     }
 
 

@@ -9,7 +9,11 @@ import com.nantesmatthew.movie.domain.use_case.GetMovieUseCase
 import com.nantesmatthew.user_session.domain.model.UserSession
 import com.nantesmatthew.user_session.domain.use_case.SaveUserSessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.time.Duration
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +24,13 @@ class MovieDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
+
+    private val _previewVideoState =
+        MutableStateFlow<MovieDetailsPreviewState>(MovieDetailsPreviewState.NotPlaying)
+    val previewVideoState = _previewVideoState.asStateFlow()
+
+    private val _previewVideoTimeState = MutableStateFlow(0)
+    val previewVideoTimeState = _previewVideoTimeState.asStateFlow()
 
     private val _movie = MutableLiveData<Movie>()
     val movie = _movie as LiveData<Movie>
@@ -33,6 +44,9 @@ class MovieDetailViewModel @Inject constructor(
         getMovie(trackId)
     }
 
+    fun playPausePreview(state: MovieDetailsPreviewState) {
+        _previewVideoState.value = state
+    }
 
     private fun getMovie(trackId: Int) {
         viewModelScope.launch {
@@ -58,8 +72,29 @@ class MovieDetailViewModel @Inject constructor(
 
     fun saveUserSession(userSession: UserSession) {
         viewModelScope.launch {
-           val isSaved =  saveUserSessionUseCase(userSession)
+            val isSaved = saveUserSessionUseCase(userSession)
             Log.d(TAG, "saveUserSession: ${isSaved.status}")
         }
     }
+
+    private val timerFlow = (0..Int.MAX_VALUE)
+        .asSequence()
+        .asFlow()
+        .onEach { delay(1_000) }
+    private var timerJob: Job? = null
+    fun startStopTimer(start: Boolean) {
+        if (start) {
+            if (timerJob != null) return
+            timerJob = viewModelScope.launch {
+                timerFlow.collectLatest {
+                    _previewVideoTimeState.value = it
+                }
+            }
+        }else{
+            timerJob?.cancel()
+            timerJob = null
+        }
+
+    }
+
 }

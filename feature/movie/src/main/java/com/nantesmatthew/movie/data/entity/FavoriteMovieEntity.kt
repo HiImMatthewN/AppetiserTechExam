@@ -26,6 +26,7 @@ fun FavoriteMovieEntity.toDomain(): Movie {
         artwork = this.movieEntity.artwork,
         trackPrice = this.movieEntity.trackPrice,
         trackTimeMillis = this.movieEntity.durationInMillis,
+        previewUrl = this.movieEntity.previewUrl,
         shortDescription =  this.movieEntity.shortDescription,
         longDescription = this.movieEntity.longDescription,
         isFavorite = true

@@ -5,17 +5,23 @@
       <map>
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/app/src/main/res/layout/activity_main.xml" value="0.12916666666666668" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/app/src/main/res/layout/item_layout.xml" value="0.12916666666666668" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/avd_close_to_play.xml" value="0.205" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/avd_play_to_close.xml" value="0.205" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/bg_circle.xml" value="0.2565" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/bg_fading_black.xml" value="0.1" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/bg_rounded_top_corners.xml" value="0.29" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/bg_shadow.xml" value="0.217" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_arrow_right.xml" value="0.2085" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_back.xml" value="0.217" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_close.xml" value="0.13" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_close_24.xml" value="0.2085" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_close_36.xml" value="0.13" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_favorite_border.xml" value="0.208" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_favorite_filled.xml" value="0.1435" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_image_placeholder.xml" value="0.2255" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_play.xml" value="0.217" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/ic_search.xml" value="0.2865" />
-        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/fragment_movie_details.xml" value="0.25" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/fragment_movie_details.xml" value="0.22" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/fragment_movies.xml" value="0.1" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/fragment_movies_test.xml" value="0.15384615384615385" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/item_genre.xml" value="0.22" />

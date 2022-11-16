@@ -20,6 +20,8 @@ class MovieEntity(
     val trackPrice: Double,
     @ColumnInfo(name = "duration")
     val durationInMillis: Int,
+    @ColumnInfo(name = "preview_url")
+    val previewUrl:String,
     @ColumnInfo(name = "short_description")
     val shortDescription:String,
     @ColumnInfo(name = "long_description")
@@ -35,6 +37,7 @@ fun MovieEntity.toDomain(): Movie {
         artwork = this.artwork,
         trackPrice = this.trackPrice,
         trackTimeMillis = this.durationInMillis,
+        previewUrl = this.previewUrl,
         shortDescription = this.shortDescription,
         longDescription = this.longDescription,
         isFavorite = false
