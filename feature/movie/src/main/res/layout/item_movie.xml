@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:elevation="24dp"
-    android:animateLayoutChanges="true"
+    android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="16dp">
 
     <LinearLayout
@@ -95,11 +95,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                app:tint="@color/app_highlight"
                 android:background="?actionBarItemBackground"
                 android:src="@drawable/ic_arrow_right" />
         </LinearLayout>
 
         <TextView
+            android:visibility="gone"
             android:fontFamily="@font/inter_semi_bold"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"

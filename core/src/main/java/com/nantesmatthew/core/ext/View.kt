@@ -1,62 +1,79 @@
 package com.nantesmatthew.core.ext
 
 import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.animation.ValueAnimator
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
+import androidx.annotation.AnimatorRes
+import androidx.core.animation.addListener
 import androidx.core.view.isVisible
 
-fun View.animateVisibility(setVisible: Boolean) {
-    if (setVisible) expand(this) else collapse(this)
-}
 
-private fun expand(view: View) {
-    view.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+fun View.expand() {
+    measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     val initialHeight = 0
-    val targetHeight = view.measuredHeight
+    val targetHeight = measuredHeight
 
-    // Older versions of Android (pre API 21) cancel animations for views with a height of 0.
-    //v.getLayoutParams().height = 1;
-    view.layoutParams.height = 0
-    view.isVisible = true
 
-    animateView(view, initialHeight, targetHeight) {
+    layoutParams.height = 0
+    isVisible = true
 
-    }
-}
-
-private fun collapse(view: View) {
-    val initialHeight = view.measuredHeight
-    val targetHeight = 0
-
-    animateView(view, initialHeight, targetHeight) {
-        view.isVisible = false
-    }
-}
-
-private fun animateView(v: View, initialHeight: Int, targetHeight: Int, onEnd: () -> Unit) {
     val valueAnimator = ValueAnimator.ofInt(initialHeight, targetHeight)
     valueAnimator.addUpdateListener { animation ->
-        v.layoutParams.height = animation.animatedValue as Int
-        v.requestLayout()
+        layoutParams.height = animation.animatedValue as Int
+        requestLayout()
     }
-    valueAnimator.addListener(object : Animator.AnimatorListener {
-        override fun onAnimationEnd(animation: Animator) {
-            v.layoutParams.height = targetHeight
-            onEnd()
-        }
+    valueAnimator.addListener(onEnd = {
+        layoutParams.height = targetHeight
 
-        override fun onAnimationStart(animation: Animator) {
-
-        }
-
-        override fun onAnimationCancel(animation: Animator) {
-        }
-
-        override fun onAnimationRepeat(animation: Animator) {}
     })
     valueAnimator.duration = 300
     valueAnimator.interpolator = DecelerateInterpolator()
     valueAnimator.start()
+}
+
+fun View.collapse() {
+    val initialHeight = measuredHeight
+    val targetHeight = 0
+
+    val valueAnimator = ValueAnimator.ofInt(initialHeight, targetHeight)
+    valueAnimator.addUpdateListener { animation ->
+        layoutParams.height = animation.animatedValue as Int
+        requestLayout()
+    }
+    valueAnimator.addListener(onEnd = {
+        layoutParams.height = targetHeight
+        this.isVisible = false
+
+    })
+    valueAnimator.duration = 300
+    valueAnimator.interpolator = DecelerateInterpolator()
+    valueAnimator.start()
+
+}
+
+
+
+fun View.touchListener(onTouchDown: () -> Unit, onTouchUp: () -> Unit) {
+    this.setOnTouchListener { view, motionEvent ->
+        if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+            onTouchDown()
+        }
+        if (motionEvent.action == MotionEvent.ACTION_UP) {
+            onTouchUp()
+
+        }
+        true
+    }
+}
+
+
+fun View.animate(@AnimatorRes id: Int): Animator {
+    val animator = AnimatorInflater.loadAnimator(context, id)
+    animator.setTarget(this)
+    animator.start()
+    return animator
 }

@@ -1,21 +1,16 @@
 package com.nantesmatthew.movie.presentation
 
-import android.animation.Animator
-import android.animation.ValueAnimator
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import android.widget.Toast
+import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.nantesmatthew.core.ext.animateVisibility
+import com.nantesmatthew.core.ext.*
 import com.nantesmatthew.movie.R
 import com.nantesmatthew.movie.databinding.ItemMovieBinding
 import com.nantesmatthew.movie.domain.model.Movie
@@ -57,19 +52,45 @@ class MovieAdapter(
     inner class MovieViewHolder(val binder: ItemMovieBinding) :
         RecyclerView.ViewHolder(binder.root) {
         fun bind(movie: Movie) {
-            binder.tvShortDescription.isVisible = false
-            binder.imageCover.setOnClickListener {
-                onMovieSelected?.invoke(movie, binder.imageCover.apply {
-                    transitionName = movie.artwork
-                })
-            }
+            binder.tvTrackName.touchListener(
+                onTouchDown = {
+                    itemView.animate(R.animator.push_down)
+
+                },
+                onTouchUp = {
+                    itemView.animate(R.animator.push_up).doOnEnd {
+                        onMovieSelected?.invoke(movie, binder.imageCover.apply {
+                            transitionName = movie.artwork
+                        })
+                    }
+
+                }
+            )
+            binder.imageCover.touchListener(
+                onTouchDown = {
+                    itemView.animate(R.animator.push_down)
+
+                },
+                onTouchUp = {
+                    itemView.animate(R.animator.push_up).doOnEnd {
+                        onMovieSelected?.invoke(movie, binder.imageCover.apply {
+                            transitionName = movie.artwork
+                        })
+                    }
+
+                }
+            )
+
             binder.btnSeeDescription.setOnClickListener {
                 val notExpanded = binder.btnSeeDescription.rotation == 0.0f
-                binder.btnSeeDescription.animate().rotation(if (notExpanded) 90.0f else 0.0f)
-                    .setDuration(300).start()
 
-                binder.tvShortDescription.animateVisibility(notExpanded)
-
+                if (notExpanded) {
+                    binder.btnSeeDescription.animate(R.animator.rotate_0_to_90)
+                    binder.tvShortDescription.expand()
+                } else {
+                    binder.btnSeeDescription.animate(R.animator.rotate_90_to_0)
+                    binder.tvShortDescription.collapse()
+                }
             }
 
             binder.btnFavorite.setOnClickListener {
@@ -77,11 +98,11 @@ class MovieAdapter(
             }
 
         }
+
     }
 
     companion object {
-        const val TAG = "MovieAdapter"
-
+        private const val TAG = "MovieAdapter"
         val DIFF_UTIL = object : DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
                 return oldItem.trackId == newItem.trackId
