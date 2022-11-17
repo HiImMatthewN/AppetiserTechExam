@@ -110,8 +110,9 @@ class MovieDetailsFragment : Fragment() {
                         binder.videoViewMoviePreview.stopPlayback()
                         binder.videoViewMoviePreview.setVideoURI(null)
                         binder.containerVideoView.isVisible = false
-                        savedInstanceState?.putInt(PREVIEW_VIDEO_TIME, -1)
                         binder.tvVideoTimeStamp.text = "00:00"
+
+                        savedInstanceState?.putInt(PREVIEW_VIDEO_TIME, -1)
                     }
                     is MovieDetailsPreviewState.Playing -> {
                         movieDetailsViewModel.startStopTimer(true)
@@ -172,16 +173,10 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun timeUnitToFullTime(time: Long, timeUnit: TimeUnit): String {
-        val day: Long = timeUnit.toDays(time)
-        val hour: Long = timeUnit.toHours(time) % 24
         val minute: Long = timeUnit.toMinutes(time) % 60
         val second: Long = timeUnit.toSeconds(time) % 60
-        return if (day > 0) {
-            String.format("%dday %02d:%02d:%02d", day, hour, minute, second)
-        } else if (hour > 0) {
-            String.format("%d:%02d:%02d", hour, minute, second)
-        } else if (minute > 0) {
-            String.format("%d:%02d", minute, second)
+        return if (minute > 0) {
+            String.format("0%d:%02d", minute, second)
         } else {
             String.format("00:%02d", second)
         }
