@@ -58,13 +58,13 @@ fun View.collapse() {
 
 
 fun View.touchListener(onTouchDown: () -> Unit, onTouchUp: () -> Unit) {
-    this.setOnTouchListener { view, motionEvent ->
+    this.setOnTouchListener { _, motionEvent ->
         if (motionEvent.action == MotionEvent.ACTION_DOWN) {
             onTouchDown()
         }
         if (motionEvent.action == MotionEvent.ACTION_UP) {
             onTouchUp()
-
+            performClick()
         }
         true
     }

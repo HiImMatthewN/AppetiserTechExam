@@ -4,6 +4,9 @@ import com.nantesmatthew.user_session.domain.model.UserSession
 import com.nantesmatthew.user_session.domain.repository.UserSessionRepository
 import javax.inject.Inject
 
+/**
+ * A UseCase Class that saves the last opened screen of user
+ */
 class SaveUserSessionUseCase @Inject constructor(
     private val repository: UserSessionRepository) {
 
