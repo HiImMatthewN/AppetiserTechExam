@@ -1,6 +1,5 @@
 package com.nantesmatthew.movie.domain.use_case
 
-import android.util.Log
 import com.nantesmatthew.core.util.Resource
 import com.nantesmatthew.core.util.Status
 import com.nantesmatthew.movie.domain.model.Movie
@@ -14,7 +13,6 @@ import javax.inject.Inject
 class AddRemoveFromFavoritesUseCase @Inject constructor(private val repository: MovieRepository) {
 
     companion object {
-        private const val TAG = "AddRemoveFromFavoritesU"
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.nantesmatthew.movie.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -10,7 +9,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.nantesmatthew.core.ext.*
+import com.nantesmatthew.core.ext.animate
+import com.nantesmatthew.core.ext.collapse
+import com.nantesmatthew.core.ext.expand
+import com.nantesmatthew.core.ext.touchListener
 import com.nantesmatthew.movie.R
 import com.nantesmatthew.movie.databinding.ItemMovieBinding
 import com.nantesmatthew.movie.domain.model.Movie

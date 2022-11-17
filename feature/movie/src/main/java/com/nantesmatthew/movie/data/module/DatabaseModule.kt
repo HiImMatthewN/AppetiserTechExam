@@ -2,7 +2,6 @@ package com.nantesmatthew.movie.data.module
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

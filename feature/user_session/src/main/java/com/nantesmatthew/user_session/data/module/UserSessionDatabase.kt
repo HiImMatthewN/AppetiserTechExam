@@ -2,7 +2,6 @@ package com.nantesmatthew.user_session.data.module
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import com.nantesmatthew.user_session.data.data_source.UserSessionDao
 import com.nantesmatthew.user_session.data.entity.UserSessionEntity
 

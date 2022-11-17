@@ -1,13 +1,11 @@
 package com.nantesmatthew.movie.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.nantesmatthew.movie.R
 import com.nantesmatthew.movie.databinding.ItemGenreBinding
 import com.nantesmatthew.movie.domain.model.Movie

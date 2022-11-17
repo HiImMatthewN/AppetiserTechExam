@@ -2,7 +2,6 @@ package com.nantesmatthew.user_session.domain.model
 
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.SimpleFormatter
 
 data class UserSession(
     val lastOpened: Date,

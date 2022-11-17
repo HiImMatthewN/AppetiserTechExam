@@ -3,11 +3,11 @@ package com.nantesmatthew.movie.presentation
 import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -110,7 +110,8 @@ class MovieDetailsFragment : Fragment() {
                         binder.videoViewMoviePreview.stopPlayback()
                         binder.videoViewMoviePreview.setVideoURI(null)
                         binder.containerVideoView.isVisible = false
-                        binder.tvVideoTimeStamp.text = "00:00"
+                        binder.tvVideoTimeStamp.text =
+                            requireContext().resources.getString(R.string.timestamp_default)
 
                         savedInstanceState?.putInt(PREVIEW_VIDEO_TIME, -1)
                     }
@@ -150,7 +151,10 @@ class MovieDetailsFragment : Fragment() {
             binder.tvMovieName.text = movie.trackName
             binder.tvGenre.text = movie.primaryGenre
 
-            binder.tvRuntime.text = "Runtime: ${movie.getRuntime()}"
+            binder.tvRuntime.text = requireContext().resources.getString(
+                R.string.runtime_placeholder,
+                movie.getRuntime()
+            )
             binder.tvDescription.text = movie.longDescription
 
             binder.btnFavorite.setImageDrawable(

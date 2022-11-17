@@ -3,7 +3,6 @@ package com.nantesmatthew.movie.presentation
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -177,8 +176,11 @@ class MoviesFragment : Fragment() {
 
     private fun getToolbarTitle(toolBarState: ToolBarState, userSession: UserSession): String {
         return when (toolBarState) {
-            ToolBarState.Title -> "Appetiser Apps"
-            ToolBarState.UserSession -> "Last Opened:\n${userSession.getLastOpened()}"
+            ToolBarState.Title -> requireContext().resources.getString(R.string.appetiser_apps)
+            ToolBarState.UserSession -> requireContext().resources.getString(
+                R.string.last_opened,
+                userSession.getLastOpened()
+            )
         }
     }
 

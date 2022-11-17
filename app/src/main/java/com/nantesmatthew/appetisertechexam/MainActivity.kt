@@ -2,9 +2,7 @@ package com.nantesmatthew.appetisertechexam
 
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.Window
-import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModelMain by viewModels<MainViewModel>()
 
     companion object {
-        val IS_SCREEN_RESTORED = "IsScreenRestored"
+        const val IS_SCREEN_RESTORED = "IsScreenRestored"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,11 +67,11 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun fullScreen() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
     }
 

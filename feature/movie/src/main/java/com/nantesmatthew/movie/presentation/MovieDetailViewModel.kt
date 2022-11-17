@@ -13,7 +13,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.time.Duration
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +20,7 @@ class MovieDetailViewModel @Inject constructor(
     private val getMovieUseCase: GetMovieUseCase,
     private val saveUserSessionUseCase: SaveUserSessionUseCase,
     private val addRemoveFromFavoritesUseCase: AddRemoveFromFavoritesUseCase,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
 

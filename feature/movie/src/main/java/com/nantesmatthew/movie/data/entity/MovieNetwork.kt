@@ -1,7 +1,6 @@
 package com.nantesmatthew.movie.data.entity
 
 import com.google.gson.annotations.SerializedName
-import com.nantesmatthew.movie.domain.model.Movie
 
 
 class MovieNetwork(
