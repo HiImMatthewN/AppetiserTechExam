@@ -2,6 +2,7 @@ package com.nantesmatthew.movie.domain.use_case
 
 import com.nantesmatthew.movie.domain.repository.MovieRepository
 import javax.inject.Inject
+
 /**
  * A UseCase Class that handles all movie fetches from the [MovieRepository]
  */

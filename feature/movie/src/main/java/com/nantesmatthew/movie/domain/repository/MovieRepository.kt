@@ -15,9 +15,10 @@ interface MovieRepository {
 
     suspend fun getMovie(trackId: Int): Resource<Movie>
 
-    fun getFavoriteMovies():Flow<List<Movie>>
+     fun getFavoriteMovies(): Flow<List<Movie>>
 
     suspend fun addToFavorites(movie: Movie): Resource<Unit>
 
     suspend fun removeToFavorites(movie: Movie): Resource<Unit>
+
 }

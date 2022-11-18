@@ -16,6 +16,7 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.nantesmatthew.core.ext.animationListener
 import com.nantesmatthew.core.ext.reStoreState
 import com.nantesmatthew.movie.R
@@ -24,6 +25,7 @@ import com.nantesmatthew.user_session.domain.model.Screen
 import com.nantesmatthew.user_session.domain.model.UserSession
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**

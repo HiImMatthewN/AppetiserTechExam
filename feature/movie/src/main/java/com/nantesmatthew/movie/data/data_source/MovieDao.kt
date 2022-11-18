@@ -1,6 +1,7 @@
 package com.nantesmatthew.movie.data.data_source
 
 import androidx.room.*
+import com.nantesmatthew.movie.data.entity.FavoriteMovieEntity
 import com.nantesmatthew.movie.data.entity.MovieEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -23,6 +24,7 @@ interface MovieDao {
     @Transaction
     @Query("SELECT * FROM movie_table WHERE track_id = :trackId")
     suspend fun get(trackId: Int): MovieEntity?
+
 
 
 }

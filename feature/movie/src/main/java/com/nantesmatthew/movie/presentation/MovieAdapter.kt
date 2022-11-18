@@ -1,10 +1,13 @@
 package com.nantesmatthew.movie.presentation
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,8 +23,10 @@ import com.nantesmatthew.movie.domain.model.Movie
 class MovieAdapter(
     val onMovieSelected: ((movie: Movie, imageView: ImageView) -> Unit)? = null,
     val onAddToFavorite: ((movie: Movie) -> Unit)? = null
-) :
-    ListAdapter<Movie, MovieAdapter.MovieViewHolder>(DIFF_UTIL) {
+) : ListAdapter<Movie, MovieAdapter.MovieViewHolder>(DIFF_UTIL) {
+    private val expandedLayouts = ArrayList<Movie>()
+    private val movies = ArrayList<Movie>()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movie, parent, false)
@@ -29,8 +34,10 @@ class MovieAdapter(
         return MovieViewHolder(binder)
     }
 
+
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = getItem(position)
+
         if (holder.binder.tvTrackName.text == movie.trackName) return
 
         Glide.with(holder.itemView.context).load(movie.artwork)
@@ -48,8 +55,22 @@ class MovieAdapter(
                 ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_favorite_border)
         )
         holder.binder.tvShortDescription.text = movie.shortDescription
+
+
+        //Restore State of Movie Item
+        val isExpanded =
+            expandedLayouts.any { expandedMovie -> expandedMovie.trackId == movie.trackId }
+        holder.binder.btnSeeDescription.rotation = if (isExpanded) 90f else 0f
+        if (isExpanded) {
+            holder.binder.tvShortDescription.expand()
+        } else
+            holder.binder.tvShortDescription.isVisible = false
+
+
+
         holder.bind(movie)
     }
+
 
     inner class MovieViewHolder(val binder: ItemMovieBinding) :
         RecyclerView.ViewHolder(binder.root) {
@@ -89,14 +110,39 @@ class MovieAdapter(
                 if (notExpanded) {
                     binder.btnSeeDescription.animate(R.animator.rotate_0_to_90)
                     binder.tvShortDescription.expand()
+
+
+                    //Save Item View State
+                    val isExisting =
+                        expandedLayouts.any { expandedMovie -> expandedMovie.trackId == movie.trackId }
+                    if (!isExisting) {
+                        expandedLayouts.add(movie)
+
+                        Log.d(TAG, "${movie.trackName} added to Expanded")
+
+                    }
                 } else {
                     binder.btnSeeDescription.animate(R.animator.rotate_90_to_0)
                     binder.tvShortDescription.collapse()
+
+
+                    val wasRemoved =
+                        expandedLayouts.removeAll { expandedMovie -> expandedMovie.trackId == movie.trackId }
+                    if (wasRemoved) {
+                        Log.d(TAG, "${movie.trackName}  removed from Expanded")
+                    }
                 }
             }
 
             binder.btnFavorite.setOnClickListener {
                 onAddToFavorite?.invoke(movie)
+
+//                movies.removeAll { it.trackId == movie.trackId }
+//                movies.add(
+//                    absoluteAdapterPosition,
+//                    movie.copy(isFavorite = !movie.isFavorite)
+//                )
+//                notifyItemChanged(absoluteAdapterPosition)
             }
 
         }

@@ -56,7 +56,10 @@ class MovieRepositoryImpl @Inject constructor(
         return Resource.success(movieResult.toDomain())
     }
 
-    override fun getFavoriteMovies(): Flow<List<Movie>> = userFaveDao.get().map { it.map { it.toDomain() } }
+    override fun getFavoriteMovies(): Flow<List<Movie>> =
+        userFaveDao.get().map { it.map { it.toDomain() } }
+
+
 
     override suspend fun addToFavorites(movie: Movie): Resource<Unit> {
         val addResult = userFaveDao.insert(FavoriteMovieInfoEntity(movie.trackId))

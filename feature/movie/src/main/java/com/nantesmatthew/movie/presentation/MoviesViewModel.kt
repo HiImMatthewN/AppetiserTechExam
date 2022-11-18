@@ -1,5 +1,6 @@
 package com.nantesmatthew.movie.presentation
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.nantesmatthew.core.util.Status
 import com.nantesmatthew.movie.domain.model.Movie
@@ -56,6 +57,7 @@ class MoviesViewModel @Inject constructor(
 
         getMovies()
         getFavorites()
+
     }
 
 
@@ -89,7 +91,6 @@ class MoviesViewModel @Inject constructor(
             getMovieUseCase.getFavorites().collectLatest {
                 _favoriteMovies.value = it
             }
-
         }
 
     }
@@ -102,8 +103,8 @@ class MoviesViewModel @Inject constructor(
 
     fun addRemoveFromFavorites(movie: Movie) {
         viewModelScope.launch {
+             addRemoveFromFavoritesUseCase(movie)
 
-          addRemoveFromFavoritesUseCase(movie)
         }
     }
 

@@ -20,7 +20,7 @@ interface UserFaveDao {
 
     @Transaction
     @Query("SELECT * FROM favorite_movie_table")
-    fun get(): Flow<List<FavoriteMovieEntity>>
+     fun get(): Flow<List<FavoriteMovieEntity>>
 
     @Transaction
     @Query("SELECT * FROM favorite_movie_table WHERE track_id = :trackId")
