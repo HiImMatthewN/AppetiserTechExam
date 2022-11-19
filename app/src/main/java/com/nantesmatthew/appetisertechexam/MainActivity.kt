@@ -6,6 +6,7 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.nantesmatthew.appetisertechexam.databinding.ActivityMainBinding
 import com.nantesmatthew.movie.presentation.MoviesFragmentDirections
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        fullScreen()
+        WindowCompat.setDecorFitsSystemWindows(window,false)
 
         super.onCreate(savedInstanceState)
 
@@ -65,14 +66,5 @@ class MainActivity : AppCompatActivity() {
         outState.putBoolean(IS_SCREEN_RESTORED, true)
     }
 
-
-    private fun fullScreen() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-        }
-    }
 
 }

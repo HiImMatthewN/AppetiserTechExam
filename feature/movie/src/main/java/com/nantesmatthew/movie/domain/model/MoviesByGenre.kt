@@ -12,6 +12,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MoviesByGenre(
-    val genre:String,
+    val title:String,
     val movies:List<Movie>
 ):Parcelable

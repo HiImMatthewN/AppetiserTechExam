@@ -5,11 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.nantesmatthew.core.ext.reStoreState
 import com.nantesmatthew.movie.R
 import com.nantesmatthew.movie.databinding.ItemGenreBinding
 import com.nantesmatthew.movie.domain.model.Movie
@@ -28,12 +26,12 @@ class GenreAdapter : ListAdapter<MoviesByGenre, GenreAdapter.GenreViewHolder>(DI
 
     override fun onBindViewHolder(holder: GenreViewHolder, position: Int) {
         val movieGenre = getItem(position)
-        holder.binder.tvGenre.text = movieGenre.genre
+        holder.binder.tvGenre.text = movieGenre.title
 
 
 
         val adapter = MovieAdapter(this.onMovieSelected) { addedToFavorite ->
-            movieState[movieGenre.genre] =
+            movieState[movieGenre.title] =
                 holder.binder.rvMovies.layoutManager?.onSaveInstanceState()
             onAddToFavorite?.invoke(addedToFavorite)
         }
@@ -41,8 +39,8 @@ class GenreAdapter : ListAdapter<MoviesByGenre, GenreAdapter.GenreViewHolder>(DI
             submitList(movieGenre.movies)
         }
         holder.binder.rvMovies.adapter = adapter
-        if (movieState.containsKey(movieGenre.genre))
-            holder.binder.rvMovies.layoutManager?.onRestoreInstanceState(movieState[movieGenre.genre])
+        if (movieState.containsKey(movieGenre.title))
+            holder.binder.rvMovies.layoutManager?.onRestoreInstanceState(movieState[movieGenre.title])
 
     }
 
@@ -53,7 +51,7 @@ class GenreAdapter : ListAdapter<MoviesByGenre, GenreAdapter.GenreViewHolder>(DI
         private const val TAG = "GenreAdapter"
         val DIFF_UTIL = object : DiffUtil.ItemCallback<MoviesByGenre>() {
             override fun areItemsTheSame(oldItem: MoviesByGenre, newItem: MoviesByGenre): Boolean {
-                return oldItem.genre == newItem.genre
+                return oldItem.title == newItem.title
             }
 
             override fun areContentsTheSame(

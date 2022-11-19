@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_white"
+    android:fitsSystemWindows="true"
     app:layoutDescription="@xml/fragment_movies_scene">
 
     <ImageView
@@ -50,7 +51,7 @@
         app:layout_constraintVertical_bias=".3" />
 
     <androidx.recyclerview.widget.RecyclerView
-
+        android:paddingBottom="24dp"
         android:id="@+id/rvMovies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,6 +62,7 @@
         android:id="@+id/noResults"
         layout="@layout/layout_no_results"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="45dp" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

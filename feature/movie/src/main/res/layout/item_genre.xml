@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical"
-    android:padding="8dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    android:padding="8dp">
+
     <TextView
-        android:textColor="@color/app_black"
-        android:fontFamily="@font/inter_semi_bold"
-        android:layout_marginStart="8dp"
         android:id="@+id/tvGenre"
-        android:text="GENRE NAME"
-        android:textSize="24sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/inter_semi_bold"
+        android:text="GENRE NAME"
+        android:textColor="@color/app_black"
+        android:textSize="24sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@color/app_highlight"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:overScrollMode="never"
-        android:id="@+id/rvMovies"
-        android:orientation="horizontal"
+        android:background="@color/app_highlight" />
 
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMovies"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </LinearLayout>

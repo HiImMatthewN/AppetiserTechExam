@@ -20,7 +20,7 @@ class SortByGenreUseCase @Inject constructor(){
 
         return groupByGenre.map { (genre, movies) ->
             MoviesByGenre(genre, movies.sortedBy { it.trackName })
-        }.toList().sortedBy { it.genre }
+        }.toList().sortedBy { it.title }
 
     }
 }
