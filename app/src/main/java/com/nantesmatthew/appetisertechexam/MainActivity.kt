@@ -6,6 +6,7 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.nantesmatthew.appetisertechexam.databinding.ActivityMainBinding
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window,false)
 
         super.onCreate(savedInstanceState)
-
+        installSplashScreen()
         binder = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binder.root)
 

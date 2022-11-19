@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- I will rather have a splash screen with animated drawable icon -->
+        <item name="windowSplashScreenBackground">@color/app_white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/image_appetiser_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.AppetiserTechExam</item>
+    </style>
+</resources>
