@@ -15,11 +15,13 @@
         android:src="@drawable/image_appetiser_logo" />
 
     <EditText
+        android:maxLines="1"
         android:id="@+id/etSearchView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/app_font_regular"
         android:hint="Search Movie"
+        android:imeOptions="actionSearch"
         android:paddingBottom="16dp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,5 +1,6 @@
 package com.nantesmatthew.movie.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -7,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -16,7 +19,6 @@ import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.nantesmatthew.core.ext.animationListener
 import com.nantesmatthew.core.ext.reStoreState
 import com.nantesmatthew.movie.R
@@ -25,7 +27,6 @@ import com.nantesmatthew.user_session.domain.model.Screen
 import com.nantesmatthew.user_session.domain.model.UserSession
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -102,6 +103,7 @@ class MoviesFragment : Fragment() {
                             R.drawable.ic_close_24
                         )
                     )
+                    showSoftKeyboard()
                     binder.root.transitionToEnd()
                 } else {
                     binder.etSearchView.isEnabled = false
@@ -134,6 +136,14 @@ class MoviesFragment : Fragment() {
             runToolbarAnimation(userSession)
         }
 
+
+    }
+
+    private fun showSoftKeyboard() {
+        binder.etSearchView.requestFocus()
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(binder.etSearchView, 0)
 
     }
 
@@ -199,7 +209,7 @@ class MoviesFragment : Fragment() {
             handler.removeCallbacks(toolBarTitleRunnable!!)
             toolBarTitleRunnable = null
         }
-
+        viewModelMovies.expandSearchView(false)
     }
 
 
