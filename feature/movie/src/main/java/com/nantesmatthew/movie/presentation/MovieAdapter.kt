@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -47,7 +48,10 @@ class MovieAdapter(
             .into(holder.binder.imageCover)
         holder.binder.tvTrackName.text = movie.trackName
         holder.binder.tvArtistName.text = movie.artistName
-        holder.binder.tvTicketPrice.text = "$${movie.trackPrice}"
+        holder.binder.tvTicketPrice.text = holder.itemView.context.resources.getString(
+            R.string.movie_price,
+            movie.trackPrice.toString()
+        )
         holder.binder.btnFavorite.setImageDrawable(
             if (movie.isFavorite)
                 ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_favorite_filled)

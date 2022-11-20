@@ -120,6 +120,7 @@ class MoviesFragment : Fragment() {
 
 
         }
+        //UI Network State
         lifecycleScope.launchWhenStarted {
             viewModelMovies.networkState.collect { networkState ->
                 when (networkState) {
@@ -169,6 +170,7 @@ class MoviesFragment : Fragment() {
 
 
     }
+
 
     private fun showSoftKeyboard() {
         binder.etSearchView.requestFocus()
