@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,10 @@ import com.nantesmatthew.movie.databinding.FragmentMoviesBinding
 import com.nantesmatthew.user_session.domain.model.Screen
 import com.nantesmatthew.user_session.domain.model.UserSession
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -45,8 +49,11 @@ class MoviesFragment : Fragment() {
 
     companion object {
         private const val TAG = "MoviesFragment"
+        private const val SEARCHBAR_EXPANDED = "SearchBarExpanded"
     }
 
+    private var jobSearchViewState: Job? = null
+    private var jobNetworkState: Job? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +65,7 @@ class MoviesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         //Open/Close/Clearing Text of SearchView OnClick
         binder.btnSearch.setOnClickListener {
@@ -80,7 +88,7 @@ class MoviesFragment : Fragment() {
                 movie.artwork
             )
             findNavController().navigate(action, extras)
-
+            viewModelMovies.expandSearchView(false)
         }
         //Handles Movie Favorite on Click
         genreAdapter.onAddToFavorite = { movie ->
@@ -93,7 +101,7 @@ class MoviesFragment : Fragment() {
         }
 
         //Current State of SearchView
-        lifecycleScope.launchWhenStarted {
+        jobSearchViewState = lifecycleScope.launchWhenStarted {
             viewModelMovies.stateSearchView.collect { expand ->
                 if (expand) {
                     binder.etSearchView.isEnabled = true
@@ -121,7 +129,7 @@ class MoviesFragment : Fragment() {
 
         }
         //UI Network State
-        lifecycleScope.launchWhenStarted {
+        jobNetworkState = lifecycleScope.launchWhenStarted {
             viewModelMovies.networkState.collect { networkState ->
                 when (networkState) {
                     ConnectivityStatus.Available -> {
@@ -166,6 +174,12 @@ class MoviesFragment : Fragment() {
         //Toolbar User Session Info
         viewModelMovies.getLastUserSession { userSession ->
             runToolbarAnimation(userSession)
+        }
+
+        //Restore Searchbar State
+        savedInstanceState?.let { state ->
+            val searchViewState = state.getBoolean(SEARCHBAR_EXPANDED)
+            viewModelMovies.expandSearchView(searchViewState)
         }
 
 
@@ -242,10 +256,20 @@ class MoviesFragment : Fragment() {
             handler.removeCallbacks(toolBarTitleRunnable!!)
             toolBarTitleRunnable = null
         }
-        viewModelMovies.expandSearchView(false)
+
     }
 
+    //Clean Jobs
+    override fun onDestroyView() {
+        super.onDestroyView()
+        jobSearchViewState?.cancel()
+        jobNetworkState?.cancel()
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(SEARCHBAR_EXPANDED, viewModelMovies.stateSearchView.value)
+    }
 }
 
 

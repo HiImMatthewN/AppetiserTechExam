@@ -1,5 +1,6 @@
 package com.nantesmatthew.movie.presentation
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.nantesmatthew.core.util.ConnectivityObserver
 import com.nantesmatthew.core.util.ConnectivityStatus
@@ -33,10 +34,12 @@ class MoviesViewModel @Inject constructor(
     companion object {
         private const val TAG = "MoviesViewModel"
         const val MOVIE_LIST = "MovieList"
+        private const val SEARCHBAR_EXPANDED = "SearchBarExpanded"
+
     }
 
-    private val _stateSearchView = MutableStateFlow(false)
-    val stateSearchView = _stateSearchView.asStateFlow()
+    private val _stateSearchView = MutableStateFlow(stateHandle[SEARCHBAR_EXPANDED] ?: false)
+    val stateSearchView get() = _stateSearchView.asStateFlow()
 
     val networkState = connectivityObserver.observe().stateIn(
         viewModelScope, SharingStarted.Lazily, ConnectivityStatus.Unavailable
@@ -44,7 +47,7 @@ class MoviesViewModel @Inject constructor(
 
     private val _movieGenres: MutableLiveData<List<MoviesByGenre>> =
         stateHandle.getLiveData(MOVIE_LIST)
-    val movieGenres = _movieGenres as LiveData<List<MoviesByGenre>>
+    val movieGenres get() = _movieGenres as LiveData<List<MoviesByGenre>>
 
 
     private val _searchQuery = MutableStateFlow("")
@@ -63,16 +66,22 @@ class MoviesViewModel @Inject constructor(
             _movieGenres.postValue(moviesByGenre)
         }.launchIn(viewModelScope)
 
-      fetchData()
+        fetchData()
 
     }
-    fun fetchData(){
+
+    fun fetchData() {
         getMovies()
         getFavorites()
     }
 
     fun expandSearchView(expand: Boolean) {
+        Log.d(TAG, "expandSearchView: TEST")
         _stateSearchView.value = expand
+        stateHandle[SEARCHBAR_EXPANDED] = expand
+
+
+
     }
 
     fun filterMovie(filterQuery: String) {
