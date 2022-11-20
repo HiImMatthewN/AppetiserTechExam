@@ -1,13 +1,12 @@
 package com.nantesmatthew.movie.presentation
 
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -66,7 +65,9 @@ class MovieAdapter(
             expandedLayouts.any { expandedMovie -> expandedMovie.trackId == movie.trackId }
         holder.binder.btnSeeDescription.rotation = if (isExpanded) 90f else 0f
         if (isExpanded) {
-            holder.binder.tvShortDescription.expand()
+            Handler(Looper.getMainLooper()).postDelayed({
+                holder.binder.tvShortDescription.expand()
+            },0)
         } else
             holder.binder.tvShortDescription.isVisible = false
 
