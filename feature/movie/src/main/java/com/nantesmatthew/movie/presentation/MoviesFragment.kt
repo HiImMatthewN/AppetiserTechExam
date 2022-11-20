@@ -50,6 +50,7 @@ class MoviesFragment : Fragment() {
     companion object {
         private const val TAG = "MoviesFragment"
         private const val SEARCHBAR_EXPANDED = "SearchBarExpanded"
+        private const val SEARCHBAR_TEXT = "SearchBarText"
     }
 
     private var jobSearchViewState: Job? = null
@@ -88,8 +89,8 @@ class MoviesFragment : Fragment() {
                 movie.artwork
             )
             findNavController().navigate(action, extras)
-            binder.etSearchView.text.clear()
-            viewModelMovies.expandSearchView(false)
+//            binder.etSearchView.text.clear()
+//            viewModelMovies.expandSearchView(false)
         }
         //Handles Movie Favorite on Click
         genreAdapter.onAddToFavorite = { movie ->
@@ -180,7 +181,11 @@ class MoviesFragment : Fragment() {
         //Restore Searchbar State
         savedInstanceState?.let { state ->
             val searchViewState = state.getBoolean(SEARCHBAR_EXPANDED)
-            viewModelMovies.expandSearchView(searchViewState)
+            val searchViewTextState = state.getString(SEARCHBAR_TEXT)
+            if (searchViewState) {
+                viewModelMovies.expandSearchView(true)
+                binder.etSearchView.setText(searchViewTextState ?: "")
+            }
         }
 
 
@@ -269,6 +274,7 @@ class MoviesFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putString(SEARCHBAR_TEXT, binder.etSearchView.text.toString())
         outState.putBoolean(SEARCHBAR_EXPANDED, viewModelMovies.stateSearchView.value)
     }
 }
