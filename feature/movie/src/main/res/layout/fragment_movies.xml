@@ -64,6 +64,11 @@
         layout="@layout/layout_no_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="45dp" />
-
+         />
+    <include
+        android:id="@+id/noInternet"
+        layout="@layout/layout_no_internet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
 </androidx.constraintlayout.motion.widget.MotionLayout>
