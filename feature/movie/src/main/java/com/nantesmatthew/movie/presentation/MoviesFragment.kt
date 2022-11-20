@@ -88,6 +88,7 @@ class MoviesFragment : Fragment() {
                 movie.artwork
             )
             findNavController().navigate(action, extras)
+            binder.etSearchView.text.clear()
             viewModelMovies.expandSearchView(false)
         }
         //Handles Movie Favorite on Click
