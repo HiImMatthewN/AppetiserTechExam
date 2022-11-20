@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -90,6 +91,11 @@ class MoviesFragment : Fragment() {
         }
         //Handles Movie Favorite on Click
         genreAdapter.onAddToFavorite = { movie ->
+            if (movie.isFavorite){
+                Toast.makeText(requireContext(), "${movie.trackName} was removed from Favorites", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(requireContext(), "${movie.trackName} was added to Favorites", Toast.LENGTH_SHORT).show()
+            }
             viewModelMovies.addRemoveFromFavorites(movie)
         }
 
