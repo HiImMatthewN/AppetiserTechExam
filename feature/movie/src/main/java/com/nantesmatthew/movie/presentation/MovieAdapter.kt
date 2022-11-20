@@ -122,31 +122,19 @@ class MovieAdapter(
                     if (!isExisting) {
                         expandedLayouts.add(movie)
 
-                        Log.d(TAG, "${movie.trackName} added to Expanded")
-
                     }
                 } else {
                     binder.btnSeeDescription.animate(R.animator.rotate_90_to_0)
                     binder.tvShortDescription.collapse()
 
+                    expandedLayouts.removeAll { expandedMovie -> expandedMovie.trackId == movie.trackId }
 
-                    val wasRemoved =
-                        expandedLayouts.removeAll { expandedMovie -> expandedMovie.trackId == movie.trackId }
-                    if (wasRemoved) {
-                        Log.d(TAG, "${movie.trackName}  removed from Expanded")
-                    }
                 }
             }
 
             binder.btnFavorite.setOnClickListener {
                 onAddToFavorite?.invoke(movie)
 
-//                movies.removeAll { it.trackId == movie.trackId }
-//                movies.add(
-//                    absoluteAdapterPosition,
-//                    movie.copy(isFavorite = !movie.isFavorite)
-//                )
-//                notifyItemChanged(absoluteAdapterPosition)
             }
 
         }

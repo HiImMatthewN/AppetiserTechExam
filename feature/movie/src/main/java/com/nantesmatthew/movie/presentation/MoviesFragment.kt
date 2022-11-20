@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,9 +27,7 @@ import com.nantesmatthew.user_session.domain.model.Screen
 import com.nantesmatthew.user_session.domain.model.UserSession
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -49,8 +46,8 @@ class MoviesFragment : Fragment() {
 
     companion object {
         private const val TAG = "MoviesFragment"
-        private const val SEARCHBAR_EXPANDED = "SearchBarExpanded"
-        private const val SEARCHBAR_TEXT = "SearchBarText"
+        private const val SEARCHBAR_EXPANDED_STATE = "SearchBarExpanded"
+        private const val SEARCHBAR_QUERY_STATE  = "SearchBarQuery"
     }
 
     private var jobSearchViewState: Job? = null
@@ -89,8 +86,7 @@ class MoviesFragment : Fragment() {
                 movie.artwork
             )
             findNavController().navigate(action, extras)
-//            binder.etSearchView.text.clear()
-//            viewModelMovies.expandSearchView(false)
+
         }
         //Handles Movie Favorite on Click
         genreAdapter.onAddToFavorite = { movie ->
@@ -180,8 +176,8 @@ class MoviesFragment : Fragment() {
 
         //Restore Searchbar State
         savedInstanceState?.let { state ->
-            val searchViewState = state.getBoolean(SEARCHBAR_EXPANDED)
-            val searchViewTextState = state.getString(SEARCHBAR_TEXT)
+            val searchViewState = state.getBoolean(SEARCHBAR_EXPANDED_STATE)
+            val searchViewTextState = state.getString(SEARCHBAR_QUERY_STATE)
             if (searchViewState) {
                 viewModelMovies.expandSearchView(true)
                 binder.etSearchView.setText(searchViewTextState ?: "")
@@ -274,8 +270,8 @@ class MoviesFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCHBAR_TEXT, binder.etSearchView.text.toString())
-        outState.putBoolean(SEARCHBAR_EXPANDED, viewModelMovies.stateSearchView.value)
+        outState.putString(SEARCHBAR_QUERY_STATE, binder.etSearchView.text.toString())
+        outState.putBoolean(SEARCHBAR_EXPANDED_STATE, viewModelMovies.stateSearchView.value)
     }
 }
 

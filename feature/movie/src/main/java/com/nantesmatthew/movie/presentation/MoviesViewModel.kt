@@ -76,7 +76,6 @@ class MoviesViewModel @Inject constructor(
     }
 
     fun expandSearchView(expand: Boolean) {
-        Log.d(TAG, "expandSearchView: TEST")
         _stateSearchView.value = expand
         stateHandle[SEARCHBAR_EXPANDED] = expand
 
