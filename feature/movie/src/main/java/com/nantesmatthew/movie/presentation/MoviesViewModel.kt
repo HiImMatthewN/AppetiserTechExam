@@ -2,10 +2,15 @@ package com.nantesmatthew.movie.presentation
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.nantesmatthew.core.util.ConnectivityObserver
+import com.nantesmatthew.core.util.ConnectivityStatus
 import com.nantesmatthew.core.util.Status
 import com.nantesmatthew.movie.domain.model.Movie
 import com.nantesmatthew.movie.domain.model.MoviesByGenre
-import com.nantesmatthew.movie.domain.use_case.*
+import com.nantesmatthew.movie.domain.use_case.AddRemoveFromFavoritesUseCase
+import com.nantesmatthew.movie.domain.use_case.FilterMovieUseCase
+import com.nantesmatthew.movie.domain.use_case.GetMovieUseCase
+import com.nantesmatthew.movie.domain.use_case.SortByGenreUseCase
 import com.nantesmatthew.user_session.domain.model.UserSession
 import com.nantesmatthew.user_session.domain.use_case.GetLastUserSessionUseCase
 import com.nantesmatthew.user_session.domain.use_case.SaveUserSessionUseCase
@@ -22,21 +27,27 @@ class MoviesViewModel @Inject constructor(
     private val addRemoveFromFavoritesUseCase: AddRemoveFromFavoritesUseCase,
     private val saveUserSessionUseCase: SaveUserSessionUseCase,
     private val getLastUserSessionUseCase: GetLastUserSessionUseCase,
+    private val connectivityObserver: ConnectivityObserver,
     private val stateHandle: SavedStateHandle
 ) : ViewModel() {
 
     companion object {
         private const val TAG = "MoviesViewModel"
         const val MOVIE_LIST = "MovieList"
+        private const val SEARCHBAR_EXPANDED = "SearchBarExpanded"
+
     }
 
-    private val _stateSearchView = MutableStateFlow(false)
-    val stateSearchView = _stateSearchView.asStateFlow()
+    private val _stateSearchView = MutableStateFlow(stateHandle[SEARCHBAR_EXPANDED] ?: false)
+    val stateSearchView get() = _stateSearchView.asStateFlow()
 
+    val networkState = connectivityObserver.observe().stateIn(
+        viewModelScope, SharingStarted.Lazily, ConnectivityStatus.Unavailable
+    )
 
     private val _movieGenres: MutableLiveData<List<MoviesByGenre>> =
         stateHandle.getLiveData(MOVIE_LIST)
-    val movieGenres = _movieGenres as LiveData<List<MoviesByGenre>>
+    val movieGenres get() = _movieGenres as LiveData<List<MoviesByGenre>>
 
 
     private val _searchQuery = MutableStateFlow("")
@@ -55,14 +66,21 @@ class MoviesViewModel @Inject constructor(
             _movieGenres.postValue(moviesByGenre)
         }.launchIn(viewModelScope)
 
-        getMovies()
-        getFavorites()
+        fetchData()
 
     }
 
+    fun fetchData() {
+        getMovies()
+        getFavorites()
+    }
 
     fun expandSearchView(expand: Boolean) {
         _stateSearchView.value = expand
+        stateHandle[SEARCHBAR_EXPANDED] = expand
+
+
+
     }
 
     fun filterMovie(filterQuery: String) {
@@ -103,7 +121,7 @@ class MoviesViewModel @Inject constructor(
 
     fun addRemoveFromFavorites(movie: Movie) {
         viewModelScope.launch {
-             addRemoveFromFavoritesUseCase(movie)
+            addRemoveFromFavoritesUseCase(movie)
 
         }
     }

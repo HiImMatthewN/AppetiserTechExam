@@ -71,8 +71,7 @@ class MovieDetailViewModel @Inject constructor(
 
     fun saveUserSession(userSession: UserSession) {
         viewModelScope.launch {
-            val isSaved = saveUserSessionUseCase(userSession)
-            Log.d(TAG, "saveUserSession: ${isSaved.status}")
+             saveUserSessionUseCase(userSession)
         }
     }
 

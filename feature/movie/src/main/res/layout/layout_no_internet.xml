@@ -8,17 +8,11 @@
     android:padding="8dp">
 
     <com.airbnb.lottie.LottieAnimationView
+        app:lottie_repeatCount="-1"
         android:layout_width="144dp"
         android:layout_height="144dp"
         app:lottie_autoPlay="true"
-        app:lottie_rawRes="@raw/empty_box"
-        app:lottie_repeatCount="-1" />
+        app:lottie_rawRes="@raw/no_internet" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/inter_semi_bold"
-        android:text="No Results"
-        android:textSize="16sp" />
 
 </LinearLayout>

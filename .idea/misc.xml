@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/app/src/main/res/drawable/ic_image_appetiser_logo_adobe_express.xml" value="0.1395" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/app/src/main/res/drawable/ic_launcher_background.xml" value="0.148" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/app/src/main/res/layout/activity_main.xml" value="0.12916666666666668" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/app/src/main/res/layout/item_layout.xml" value="0.12916666666666668" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/drawable/avd_close_to_play.xml" value="0.205" />
@@ -27,6 +28,7 @@
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/fragment_movies_test.xml" value="0.15384615384615385" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/item_genre.xml" value="0.22" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/item_movie.xml" value="0.2" />
+        <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/layout_no_internet.xml" value="0.125" />
         <entry key="..\:/Users/Bell-Kenz/AndroidStudioProjects/AppetiserTechExam/feature/movie/src/main/res/layout/layout_no_results.xml" value="0.136" />
       </map>
     </option>

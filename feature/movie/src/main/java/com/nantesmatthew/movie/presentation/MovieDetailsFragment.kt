@@ -1,11 +1,14 @@
 package com.nantesmatthew.movie.presentation
 
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 
 import androidx.core.view.isVisible
@@ -72,7 +75,14 @@ class MovieDetailsFragment : Fragment() {
 
         //Handles on click of favorite
         binder.btnFavorite.setOnClickListener {
-            movieDetailsViewModel.addRemoveFromFavorite(movieDetailsViewModel.movie.value)
+            val movie = movieDetailsViewModel.movie.value
+            if (movie?.isFavorite == true){
+                Toast.makeText(requireContext(), "${movie.trackName} was removed from Favorites", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(requireContext(), "${movie?.trackName} was added to Favorites", Toast.LENGTH_SHORT).show()
+            }
+
+            movieDetailsViewModel.addRemoveFromFavorite(movie)
         }
 
         //Plays Preview Video
@@ -101,6 +111,7 @@ class MovieDetailsFragment : Fragment() {
             binder.btnPlay.showStart()
             movieDetailsViewModel.playPausePreview(MovieDetailsPreviewState.NotPlaying)
         }
+
 
         lifecycleScope.launchWhenStarted {
             movieDetailsViewModel.previewVideoState.collect { moviePreviewState ->

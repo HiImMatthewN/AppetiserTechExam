@@ -1,8 +1,8 @@
 package com.nantesmatthew.movie.presentation
 
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.animation.doOnEnd
@@ -47,7 +47,10 @@ class MovieAdapter(
             .into(holder.binder.imageCover)
         holder.binder.tvTrackName.text = movie.trackName
         holder.binder.tvArtistName.text = movie.artistName
-        holder.binder.tvTicketPrice.text = "$${movie.trackPrice}"
+        holder.binder.tvTicketPrice.text = holder.itemView.context.resources.getString(
+            R.string.movie_price,
+            movie.trackPrice.toString()
+        )
         holder.binder.btnFavorite.setImageDrawable(
             if (movie.isFavorite)
                 ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_favorite_filled)
@@ -62,7 +65,9 @@ class MovieAdapter(
             expandedLayouts.any { expandedMovie -> expandedMovie.trackId == movie.trackId }
         holder.binder.btnSeeDescription.rotation = if (isExpanded) 90f else 0f
         if (isExpanded) {
-            holder.binder.tvShortDescription.expand()
+            Handler(Looper.getMainLooper()).postDelayed({
+                holder.binder.tvShortDescription.expand()
+            },0)
         } else
             holder.binder.tvShortDescription.isVisible = false
 
@@ -118,31 +123,19 @@ class MovieAdapter(
                     if (!isExisting) {
                         expandedLayouts.add(movie)
 
-                        Log.d(TAG, "${movie.trackName} added to Expanded")
-
                     }
                 } else {
                     binder.btnSeeDescription.animate(R.animator.rotate_90_to_0)
                     binder.tvShortDescription.collapse()
 
+                    expandedLayouts.removeAll { expandedMovie -> expandedMovie.trackId == movie.trackId }
 
-                    val wasRemoved =
-                        expandedLayouts.removeAll { expandedMovie -> expandedMovie.trackId == movie.trackId }
-                    if (wasRemoved) {
-                        Log.d(TAG, "${movie.trackName}  removed from Expanded")
-                    }
                 }
             }
 
             binder.btnFavorite.setOnClickListener {
                 onAddToFavorite?.invoke(movie)
 
-//                movies.removeAll { it.trackId == movie.trackId }
-//                movies.add(
-//                    absoluteAdapterPosition,
-//                    movie.copy(isFavorite = !movie.isFavorite)
-//                )
-//                notifyItemChanged(absoluteAdapterPosition)
             }
 
         }

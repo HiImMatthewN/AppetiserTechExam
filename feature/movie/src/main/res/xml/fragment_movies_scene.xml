@@ -43,7 +43,15 @@
 
         <Constraint android:id="@+id/noResults"
             motion:visibilityMode="ignore"
-            motion:layout_constraintBottom_toBottomOf="@id/rvMovies"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="@id/rvMovies"
+            motion:layout_constraintStart_toStartOf="@id/rvMovies"
+            motion:layout_constraintTop_toTopOf="@id/rvMovies"
+            motion:layout_constraintVertical_bias=".3"
+            />
+        <Constraint android:id="@+id/noInternet"
+            motion:visibilityMode="ignore"
+            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="@id/rvMovies"
             motion:layout_constraintStart_toStartOf="@id/rvMovies"
             motion:layout_constraintTop_toTopOf="@id/rvMovies"
@@ -97,7 +105,15 @@
         <Constraint android:id="@+id/noResults"
             motion:visibilityMode="ignore"
 
-            motion:layout_constraintBottom_toBottomOf="@id/rvMovies"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="@id/rvMovies"
+            motion:layout_constraintStart_toStartOf="@id/rvMovies"
+            motion:layout_constraintTop_toTopOf="@id/rvMovies"
+            motion:layout_constraintVertical_bias=".3"
+            />
+        <Constraint android:id="@+id/noInternet"
+            motion:visibilityMode="ignore"
+            motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="@id/rvMovies"
             motion:layout_constraintStart_toStartOf="@id/rvMovies"
             motion:layout_constraintTop_toTopOf="@id/rvMovies"

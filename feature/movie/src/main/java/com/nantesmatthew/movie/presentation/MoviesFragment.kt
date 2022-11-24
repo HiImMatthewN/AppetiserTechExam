@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -21,11 +21,13 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.nantesmatthew.core.ext.animationListener
 import com.nantesmatthew.core.ext.reStoreState
+import com.nantesmatthew.core.util.ConnectivityStatus
 import com.nantesmatthew.movie.R
 import com.nantesmatthew.movie.databinding.FragmentMoviesBinding
 import com.nantesmatthew.user_session.domain.model.Screen
 import com.nantesmatthew.user_session.domain.model.UserSession
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import java.util.*
 
 
@@ -45,8 +47,12 @@ class MoviesFragment : Fragment() {
 
     companion object {
         private const val TAG = "MoviesFragment"
+        private const val SEARCHBAR_EXPANDED_STATE = "SearchBarExpanded"
+        private const val SEARCHBAR_QUERY_STATE  = "SearchBarQuery"
     }
 
+    private var jobSearchViewState: Job? = null
+    private var jobNetworkState: Job? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,6 +64,7 @@ class MoviesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         //Open/Close/Clearing Text of SearchView OnClick
         binder.btnSearch.setOnClickListener {
@@ -84,6 +91,11 @@ class MoviesFragment : Fragment() {
         }
         //Handles Movie Favorite on Click
         genreAdapter.onAddToFavorite = { movie ->
+            if (movie.isFavorite){
+                Toast.makeText(requireContext(), "${movie.trackName} was removed from Favorites", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(requireContext(), "${movie.trackName} was added to Favorites", Toast.LENGTH_SHORT).show()
+            }
             viewModelMovies.addRemoveFromFavorites(movie)
         }
 
@@ -93,7 +105,7 @@ class MoviesFragment : Fragment() {
         }
 
         //Current State of SearchView
-        lifecycleScope.launchWhenStarted {
+        jobSearchViewState = lifecycleScope.launchWhenStarted {
             viewModelMovies.stateSearchView.collect { expand ->
                 if (expand) {
                     binder.etSearchView.isEnabled = true
@@ -117,12 +129,44 @@ class MoviesFragment : Fragment() {
                     binder.root.transitionToStart()
                 }
             }
-        }
 
+
+        }
+        //UI Network State
+        jobNetworkState = lifecycleScope.launchWhenStarted {
+            viewModelMovies.networkState.collect { networkState ->
+                when (networkState) {
+                    ConnectivityStatus.Available -> {
+                        binder.noInternet.root.isVisible = false
+                        viewModelMovies.fetchData()
+                    }
+                    ConnectivityStatus.Unavailable -> {
+                        val isInEditMode = viewModelMovies.stateSearchView.value
+                        val hasNoMovies = viewModelMovies.movieGenres.value.isNullOrEmpty()
+                        binder.noInternet.root.isVisible = !isInEditMode && hasNoMovies
+
+                    }
+                    ConnectivityStatus.Lost -> {
+                        val isInEditMode = viewModelMovies.stateSearchView.value
+                        val hasNoMovies = viewModelMovies.movieGenres.value.isNullOrEmpty()
+                        binder.noInternet.root.isVisible = !isInEditMode && hasNoMovies
+
+                    }
+                }
+
+            }
+
+
+        }
 
         //State of Movies
         viewModelMovies.movieGenres.distinctUntilChanged().observe(viewLifecycleOwner) { genres ->
-            binder.noResults.root.isVisible = genres.isEmpty()
+            val isInEditMode = viewModelMovies.stateSearchView.value
+            val hasNoConnection = viewModelMovies.networkState.value != ConnectivityStatus.Available
+
+            binder.noResults.root.isVisible = genres.isEmpty() && isInEditMode
+            binder.noInternet.root.isVisible = genres.isEmpty() && !isInEditMode && hasNoConnection
+
             binder.rvMovies.adapter = genreAdapter.apply {
                 binder.rvMovies.reStoreState()
                 submitList(genres)
@@ -136,8 +180,19 @@ class MoviesFragment : Fragment() {
             runToolbarAnimation(userSession)
         }
 
+        //Restore Searchbar State
+        savedInstanceState?.let { state ->
+            val searchViewState = state.getBoolean(SEARCHBAR_EXPANDED_STATE)
+            val searchViewTextState = state.getString(SEARCHBAR_QUERY_STATE)
+            if (searchViewState) {
+                viewModelMovies.expandSearchView(true)
+                binder.etSearchView.setText(searchViewTextState ?: "")
+            }
+        }
+
 
     }
+
 
     private fun showSoftKeyboard() {
         binder.etSearchView.requestFocus()
@@ -209,10 +264,21 @@ class MoviesFragment : Fragment() {
             handler.removeCallbacks(toolBarTitleRunnable!!)
             toolBarTitleRunnable = null
         }
-        viewModelMovies.expandSearchView(false)
+
     }
 
+    //Clean Jobs
+    override fun onDestroyView() {
+        super.onDestroyView()
+        jobSearchViewState?.cancel()
+        jobNetworkState?.cancel()
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SEARCHBAR_QUERY_STATE, binder.etSearchView.text.toString())
+        outState.putBoolean(SEARCHBAR_EXPANDED_STATE, viewModelMovies.stateSearchView.value)
+    }
 }
 
 
